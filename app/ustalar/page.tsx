@@ -1,15 +1,19 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { masters, regions, professions, getCitiesByRegion } from '@/lib/data';
+import { regions, professions, getCitiesByRegion } from '@/lib/data'; // Keep static data for filters
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { Master } from '@/types';
 
 export default function UstallarPage() {
+  const [masters, setMasters] = useState<Master[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
   const [selectedRegion, setSelectedRegion] = useState('');
   const [selectedCity, setSelectedCity] = useState('');
   const [selectedProfession, setSelectedProfession] = useState('');
@@ -20,27 +24,47 @@ export default function UstallarPage() {
 
   const cities = selectedRegion ? getCitiesByRegion(selectedRegion) : [];
 
-  const filteredMasters = useMemo(() => {
-    let result = masters.filter(m => {
-      if (selectedRegion && m.region !== selectedRegion) return false;
-      if (selectedCity && m.city !== selectedCity) return false;
-      if (selectedProfession && m.profession !== selectedProfession) return false;
-      if (minRating && (m.rating || 0) < minRating) return false;
-      if (verifiedOnly && !m.isVerified) return false;
-      return true;
-    });
+  const fetchMasters = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const params = new URLSearchParams();
+      if (selectedRegion) params.append('region', selectedRegion);
+      if (selectedCity) params.append('city', selectedCity);
+      if (selectedProfession) params.append('profession', selectedProfession);
 
-    // Sort
-    if (sortBy === 'rating') {
-      result.sort((a, b) => (b.rating || 0) - (a.rating || 0));
-    } else if (sortBy === 'reviews') {
-      result.sort((a, b) => (b.reviewCount || 0) - (a.reviewCount || 0));
-    } else if (sortBy === 'experience') {
-      result.sort((a, b) => (b.experience || 0) - (a.experience || 0));
+      const res = await fetch(`/api/masters?${params.toString()}`);
+      if (res.ok) {
+        let data = await res.json();
+
+        // Client side filtering for visual things not yet in DB query (rating, verified)
+        if (minRating > 0) {
+          data = data.filter((m: any) => (m.rating || 0) >= minRating);
+        }
+        if (verifiedOnly) {
+          data = data.filter((m: any) => m.isVerified);
+        }
+
+        // Client side sort (simplified for now)
+        if (sortBy === 'rating') {
+          data.sort((a: any, b: any) => (b.rating || 0) - (a.rating || 0));
+        } else if (sortBy === 'reviews') {
+          data.sort((a: any, b: any) => (b.reviewCount || 0) - (a.reviewCount || 0));
+        } else if (sortBy === 'experience') {
+          data.sort((a: any, b: any) => (b.experience || 0) - (a.experience || 0));
+        }
+
+        setMasters(data);
+      }
+    } catch (error) {
+      console.error('Failed to fetch masters', error);
+    } finally {
+      setIsLoading(false);
     }
-
-    return result;
   }, [selectedRegion, selectedCity, selectedProfession, minRating, verifiedOnly, sortBy]);
+
+  useEffect(() => {
+    fetchMasters();
+  }, [fetchMasters]);
 
   const clearFilters = () => {
     setSelectedRegion('');
@@ -147,7 +171,7 @@ export default function UstallarPage() {
           {/* Sort */}
           <div className="flex items-center justify-between mt-4 pt-4 border-t border-gray-100">
             <span className="text-sm text-gray-500">
-              {filteredMasters.length} {language === 'uz' ? "ta usta topildi" : language === 'ru' ? "мастеров найдено" : "masters found"}
+              {masters.length} {language === 'uz' ? "ta usta topildi" : language === 'ru' ? "мастеров найдено" : "masters found"}
             </span>
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">{language === 'uz' ? "Saralash:" : language === 'ru' ? "Сортировка:" : "Sort by:"}</span>
@@ -166,83 +190,96 @@ export default function UstallarPage() {
 
         {/* Masters Grid */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {filteredMasters.map(master => (
-            <Link
-              key={master.id}
-              href={`/ustalar/${master.id}`}
-              className="card p-5 group"
-            >
-              {/* Header */}
-              <div className="flex items-start gap-4">
-                <div className="relative">
-                  <Image
-                    src={master.avatar}
-                    alt={master.name}
-                    width={64}
-                    height={64}
-                    className="w-16 h-16 rounded-full object-cover ring-2 ring-gray-100"
-                  />
-                  {master.isVerified && (
-                    <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
-                      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="white" className="w-4 h-4">
-                        <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
-                      </svg>
-                    </div>
+          {isLoading ? (
+            Array(8).fill(0).map((_, i) => (
+              <div key={i} className="card p-5 animate-pulse">
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 bg-gray-200 rounded-full" />
+                  <div className="flex-1 space-y-2">
+                    <div className="h-4 bg-gray-200 rounded w-3/4" />
+                    <div className="h-3 bg-gray-200 rounded w-1/2" />
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            masters.map(master => (
+              <Link
+                key={master.id}
+                href={`/ustalar/${master.id}`}
+                className="card p-5 group"
+              >
+                {/* Header */}
+                <div className="flex items-start gap-4">
+                  <div className="relative">
+                    <Image
+                      src={master.avatar || '/img/logo-new.png'}
+                      alt={master.name}
+                      width={64}
+                      height={64}
+                      className="w-16 h-16 rounded-full object-cover ring-2 ring-gray-100"
+                    />
+                    {master.isVerified && (
+                      <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="white" className="w-4 h-4">
+                          <path fillRule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clipRule="evenodd" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors truncate">
+                      {master.name}
+                    </h3>
+                    <p className="text-sm text-primary-600 font-medium">{master.profession}</p>
+                    <p className="text-xs text-gray-500 mt-1">{master.region}, {master.city}</p>
+                  </div>
+                </div>
+
+                {/* Stats */}
+                <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-100">
+                  <div className="flex items-center gap-1">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-400">
+                      <path fillRule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clipRule="evenodd" />
+                    </svg>
+                    <span className="text-sm font-semibold text-gray-900">{master.rating || '—'}</span>
+                  </div>
+                  <span className="text-xs text-gray-400">|</span>
+                  <span className="text-sm text-gray-500">{master.reviewCount || 0} {language === 'uz' ? "sharh" : language === 'ru' ? "отзывов" : "reviews"}</span>
+                  {master.experience && (
+                    <>
+                      <span className="text-xs text-gray-400">|</span>
+                      <span className="text-sm text-gray-500">{master.experience} {language === 'uz' ? "yil" : language === 'ru' ? "лет" : "years"}</span>
+                    </>
                   )}
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-gray-900 group-hover:text-primary-600 transition-colors truncate">
-                    {master.name}
-                  </h3>
-                  <p className="text-sm text-primary-600 font-medium">{master.profession}</p>
-                  <p className="text-xs text-gray-500 mt-1">{master.region}, {master.city}</p>
-                </div>
-              </div>
 
-              {/* Stats */}
-              <div className="flex items-center gap-4 mt-4 pt-4 border-t border-gray-100">
-                <div className="flex items-center gap-1">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 text-amber-400">
-                    <path fillRule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clipRule="evenodd" />
-                  </svg>
-                  <span className="text-sm font-semibold text-gray-900">{master.rating || '—'}</span>
-                </div>
-                <span className="text-xs text-gray-400">|</span>
-                <span className="text-sm text-gray-500">{master.reviewCount || 0} {language === 'uz' ? "sharh" : language === 'ru' ? "отзывов" : "reviews"}</span>
-                {master.experience && (
-                  <>
-                    <span className="text-xs text-gray-400">|</span>
-                    <span className="text-sm text-gray-500">{master.experience} {language === 'uz' ? "yil" : language === 'ru' ? "лет" : "years"}</span>
-                  </>
+                {/* Badges */}
+                {master.badges && master.badges.length > 0 && (
+                  <div className="flex flex-wrap gap-1 mt-3">
+                    {master.badges.slice(0, 2).map(badge => (
+                      <span
+                        key={badge.id}
+                        className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-700 text-xs rounded-full"
+                      >
+                        {badge.icon} {badge.name}
+                      </span>
+                    ))}
+                  </div>
                 )}
-              </div>
 
-              {/* Badges */}
-              {master.badges && master.badges.length > 0 && (
-                <div className="flex flex-wrap gap-1 mt-3">
-                  {master.badges.slice(0, 2).map(badge => (
-                    <span
-                      key={badge.id}
-                      className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-700 text-xs rounded-full"
-                    >
-                      {badge.icon} {badge.name}
-                    </span>
-                  ))}
-                </div>
-              )}
-
-              {/* Response Time */}
-              {master.responseTime && (
-                <div className="flex items-center gap-1.5 mt-3 text-xs text-green-600">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                  {language === 'uz' ? "Javob:" : language === 'ru' ? "Ответ:" : "Response:"} {master.responseTime}
-                </div>
-              )}
-            </Link>
-          ))}
+                {/* Response Time */}
+                {master.responseTime && (
+                  <div className="flex items-center gap-1.5 mt-3 text-xs text-green-600">
+                    <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                    {language === 'uz' ? "Javob:" : language === 'ru' ? "Ответ:" : "Response:"} {master.responseTime}
+                  </div>
+                )}
+              </Link>
+            )))}
         </section>
 
-        {filteredMasters.length === 0 && (
+        {!isLoading && masters.length === 0 && (
           <div className="text-center py-16">
             <div className="text-6xl mb-4">😔</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">

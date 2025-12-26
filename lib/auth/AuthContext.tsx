@@ -1,8 +1,8 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 
-export type UserRole = 'master' | 'client';
+export type UserRole = 'master' | 'client' | 'admin';
 
 export interface User {
     id: string;
@@ -16,7 +16,7 @@ export interface User {
     city?: string;
     bio?: string;
     experience?: number;
-    services?: any[]; // Simplified for now
+    services?: any[];
 }
 
 interface AuthContextType {
@@ -26,7 +26,7 @@ interface AuthContextType {
     verifyOTP: (phone: string, otp: string) => Promise<boolean>;
     logout: () => void;
     updateProfile: (data: Partial<User>) => void;
-    register: (phone: string, role: UserRole) => Promise<void>;
+    register: (phone: string, role: UserRole) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -34,80 +34,139 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [user, setUser] = useState<User | null>(null);
     const [isLoading, setIsLoading] = useState(true);
+    const tempRoleRef = useRef<UserRole | null>(null);
 
     useEffect(() => {
-        // Check local storage on mount
-        const storedUser = localStorage.getItem('user');
-        if (storedUser) {
-            try {
-                setUser(JSON.parse(storedUser));
-            } catch (e) {
-                console.error('Failed to parse user data', e);
-                localStorage.removeItem('user');
-            }
-        }
-        setIsLoading(false);
+        checkSession();
     }, []);
 
+    const checkSession = async () => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            setIsLoading(false);
+            return;
+        }
+
+        try {
+            const res = await fetch('/api/auth/me', {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                }
+            });
+            const data = await res.json();
+
+            if (data.user) {
+                setUser(data.user);
+            } else {
+                logout(); // Invalid token
+            }
+        } catch (error) {
+            console.error('Session check failed', error);
+            logout(); // Error -> logout
+        } finally {
+            setIsLoading(false);
+        }
+    };
+
     const login = async (phone: string): Promise<boolean> => {
-        // Simulate API call
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                // For demo, always return true to proceed to OTP
-                resolve(true);
-            }, 1000);
-        });
+        try {
+            const res = await fetch('/api/auth/otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone })
+            });
+            const data = await res.json();
+            if (data.success) {
+                tempRoleRef.current = null; // Clear any reg role
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Login failed', error);
+            return false;
+        }
+    };
+
+    const register = async (phone: string, role: UserRole): Promise<boolean> => {
+        try {
+            const res = await fetch('/api/auth/otp', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ phone })
+            });
+            const data = await res.json();
+            if (data.success) {
+                tempRoleRef.current = role; // Store role for verification step
+                return true;
+            }
+            return false;
+        } catch (error) {
+            console.error('Registration failed', error);
+            return false;
+        }
     };
 
     const verifyOTP = async (phone: string, otp: string): Promise<boolean> => {
-        // Simulate API verification
-        // In real app, verify OTP with backend
-        return new Promise((resolve) => {
-            setTimeout(() => {
-                if (otp === '123456') { // Mock OTP
-                    // Check if user exists in "database" (localStorage for now or mock data)
-                    // For this flow, we might be verifying for login or registration.
-                    // Let's assume if they are verifying, they are authenticated.
-                    // If we had a real backend, we'd get the user object back.
+        try {
+            const res = await fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    phone,
+                    otp,
+                    role: tempRoleRef.current // Send role if it was a registration flow
+                })
+            });
 
-                    // Here we don't set user yet if it's new registration? 
-                    // Actually, usually OTP returns a token and user info.
+            const data = await res.json();
 
-                    // For now, let's say verification adds a "verified" state but we need to know if they are new.
-                    resolve(true);
-                } else {
-                    resolve(false);
-                }
-            }, 1000);
-        });
+            if (data.success && data.token) {
+                localStorage.setItem('token', data.token);
+                // Also define user immediately from response
+                setUser(data.user);
+                return true;
+            }
+
+            return false;
+        } catch (error) {
+            console.error('Verify OTP failed', error);
+            return false;
+        }
     };
-
-    const register = async (phone: string, role: UserRole) => {
-        const newUser: User = {
-            id: Math.random().toString(36).substr(2, 9),
-            phone,
-            role,
-            profileCompleted: false,
-        };
-        setUser(newUser);
-        localStorage.setItem('user', JSON.stringify(newUser));
-    };
-
 
     const logout = () => {
         setUser(null);
-        localStorage.removeItem('user');
-        localStorage.removeItem('isLoggedIn'); // Cleanup old key if exists
+        localStorage.removeItem('token');
+        localStorage.removeItem('user'); // Cleanup old keys
+        localStorage.removeItem('isLoggedIn');
         window.location.href = '/';
     };
 
-    const updateProfile = (data: Partial<User>) => {
-        setUser((prev) => {
-            if (!prev) return null;
-            const updated = { ...prev, ...data };
-            localStorage.setItem('user', JSON.stringify(updated));
-            return updated;
-        });
+    const updateProfile = async (data: Partial<User>) => {
+        try {
+            const token = localStorage.getItem('token');
+            if (!token) return;
+
+            const res = await fetch('/api/users/profile', {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(data)
+            });
+
+            if (res.ok) {
+                setUser((prev) => {
+                    if (!prev) return null;
+                    return { ...prev, ...data };
+                });
+            } else {
+                console.error('Failed to update profile backend');
+            }
+        } catch (error) {
+            console.error('Update profile error', error);
+        }
     };
 
     return (

@@ -1,0 +1,108 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model User {
+  id        String   @id @default(cuid())
+  phone     String   @unique
+  role      String   // 'master' | 'client' | 'admin'
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  masterProfile MasterProfile?
+  requests      Request[]      @relation("ClientRequests")
+  reviews       Review[]       @relation("ClientReviews")
+  sessions      Session[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MasterProfile {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  profession  String
+  region      String
+  city        String
+  bio         String?
+  experience  Int      @default(0) // years
+  isVerified  Boolean  @default(false)
+  rating      Float    @default(0)
+  reviewCount Int      @default(0)
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  services    Service[]
+  portfolio   PortfolioItem[]
+  requests    Request[]       @relation("MasterRequests")
+  reviews     Review[]        @relation("MasterReviews")
+}
+
+model Service {
+  id              String        @id @default(cuid())
+  masterProfileId String
+  name            String
+  price           Float         @default(0)
+  priceType       String        // 'fixed' | 'hourly' | 'negotiable'
+  
+  masterProfile   MasterProfile @relation(fields: [masterProfileId], references: [id], onDelete: Cascade)
+}
+
+model PortfolioItem {
+  id              String        @id @default(cuid())
+  masterProfileId String
+  title           String?
+  imageUrl        String
+  
+  masterProfile   MasterProfile @relation(fields: [masterProfileId], references: [id], onDelete: Cascade)
+}
+
+model Request {
+  id              String        @id @default(cuid())
+  clientId        String
+  masterPrifleId  String
+  status          String        // 'new' | 'accepted' | 'in_progress' | 'completed' | 'cancelled' | 'rejected'
+  message         String?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  client          User          @relation("ClientRequests", fields: [clientId], references: [id])
+  master          MasterProfile @relation("MasterRequests", fields: [masterPrifleId], references: [id])
+}
+
+model Review {
+  id              String        @id @default(cuid())
+  clientId        String
+  masterProfileId String
+  rating          Int
+  comment         String?
+  createdAt       DateTime      @default(now())
+
+  client          User          @relation("ClientReviews", fields: [clientId], references: [id])
+  master          MasterProfile @relation("MasterReviews", fields: [masterProfileId], references: [id])
+}
+
+// Helper models for strictly typed locations if needed, 
+// though for now we might map the existing JSON data in lib/data.ts 
+// We can seed these or just use string matching.
+// Given the requirements "Data must be type-safe (no any)", using Strings with validation is often simpler for MVP than Full Relational Location DB unless explicitly asked to seed DB with locations.
+// The user asked "Regions and cities must be correctly structured and typed". 
+// Types/index.ts already has Region/City types. We can persist them as strings in User/MasterProfile for now to assume they match the static data valid values.

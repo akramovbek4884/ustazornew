@@ -10,13 +10,33 @@ import { useSearchParams } from 'next/navigation';
 import { useAuth } from '@/lib/auth/AuthContext';
 import MasterProfileSetup from '@/components/auth/MasterProfileSetup';
 
+interface RequestItem {
+  id: string;
+  status: string;
+  message: string;
+  createdAt: string;
+  master?: {
+    id: string;
+    user: { name: string; phone: string };
+  };
+  client?: {
+    user: { name: string; phone: string };
+  };
+}
+
 export default function ProfilPage() {
+  const [activeTab, setActiveTab] = useState<'requests' | 'profile'>('requests');
+  const [requests, setRequests] = useState<RequestItem[]>([]);
+  const [isLoadingRequests, setIsLoadingRequests] = useState(false);
+
+  // Profile Form State
   const [currentStep, setCurrentStep] = useState(1);
   const [profileImg, setProfileImg] = useState('/img/logo-new.png');
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+
   const { t, language } = useLanguage();
-  const { user } = useAuth();
+  const { user, updateProfile } = useAuth();
   const searchParams = useSearchParams();
   const isEditMode = searchParams.get('edit') === 'true';
 

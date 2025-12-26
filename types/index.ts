@@ -19,6 +19,7 @@ export interface Master {
   completedJobs?: number;
   hourlyRate?: number;
   services?: Service[];
+  reviews?: Review[];
   portfolio?: PortfolioItem[];
   availability?: Availability;
   badges?: Badge[];
