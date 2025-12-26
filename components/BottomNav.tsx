@@ -58,8 +58,8 @@ export default function BottomNav() {
 
                 {/* Profile (or Login if not logged in) */}
                 <Link
-                    href={isLoggedIn ? "/profil" : "/"}
-                    className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/profil') || (!isLoggedIn && isActive('/')) ? 'text-primary-600' : 'text-gray-500'
+                    href={isLoggedIn ? "/profil" : "/auth/register"}
+                    className={`flex flex-col items-center justify-center w-full h-full space-y-1 ${isActive('/profil') || (!isLoggedIn && isActive('/auth/register')) ? 'text-primary-600' : 'text-gray-500'
                         }`}
                 >
                     {isLoggedIn ? (

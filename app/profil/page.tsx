@@ -6,6 +6,9 @@ import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { useSearchParams } from 'next/navigation';
+import { useAuth } from '@/lib/auth/AuthContext';
+import MasterProfileSetup from '@/components/auth/MasterProfileSetup';
 
 export default function ProfilPage() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -13,6 +16,17 @@ export default function ProfilPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const { t, language } = useLanguage();
+  const { user } = useAuth();
+  const searchParams = useSearchParams();
+  const isEditMode = searchParams.get('edit') === 'true';
+
+  if (user?.role === 'master' && (!user.profileCompleted || isEditMode)) {
+    return (
+      <div className="min-h-screen bg-gray-50 pt-24 pb-24">
+        <MasterProfileSetup />
+      </div>
+    );
+  }
 
   // Form steps with translations
   const steps = [
@@ -236,8 +250,8 @@ export default function ProfilPage() {
             >
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all ${currentStep >= step.id
-                    ? 'bg-primary-500 text-white'
-                    : 'bg-gray-100 text-gray-400'
+                  ? 'bg-primary-500 text-white'
+                  : 'bg-gray-100 text-gray-400'
                   }`}
               >
                 {currentStep > step.id ? (

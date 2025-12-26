@@ -65,7 +65,7 @@ export default function Header() {
   return (
     <>
       <header
-        className={`sticky top-0 z-[100] transition-all duration-300 ${scrolled
+        className={`sticky top-0 z-[50] transition-all duration-300 ${scrolled
           ? 'bg-white shadow-lg py-2'
           : 'bg-gradient-to-r from-primary-500 to-primary-600 py-3'
           }`}
