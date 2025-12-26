@@ -187,7 +187,7 @@ export default function HomePage() {
                 >
                   <option value="">{t.home.searchSection.allRegions}</option>
                   {regions.map(r => (
-                    <option key={r} value={r}>{r}</option>
+                    <option key={r.id} value={r.name}>{r.name}</option>
                   ))}
                 </select>
               </div>
@@ -202,7 +202,7 @@ export default function HomePage() {
                 >
                   <option value="">{t.home.searchSection.allDistricts}</option>
                   {cities.map(c => (
-                    <option key={c} value={c}>{c}</option>
+                    <option key={c.id} value={c.name}>{c.name}</option>
                   ))}
                 </select>
               </div>

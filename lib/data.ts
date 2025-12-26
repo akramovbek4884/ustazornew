@@ -2,7 +2,7 @@ import {
   Master, Video, Course, Question, Material,
   Booking, Review, Job, ForumCategory, ForumTopic,
   BlogPost, Conversation, Message, Notification,
-  Service, PortfolioItem
+  Service, PortfolioItem, Region, City
 } from '@/types';
 
 // ==================== MASTERS ====================
@@ -160,17 +160,71 @@ export const masters: Master[] = [
   }
 ];
 
-export const regions = ['Toshkent', 'Samarqand', "Farg'ona", 'Andijon', 'Namangan', 'Buxoro', 'Xorazm', 'Qashqadaryo', 'Surxondaryo', 'Jizzax', 'Sirdaryo', 'Navoiy', "Qoraqalpog'iston"];
+export const regions: Region[] = [
+  { id: '1', name: 'Toshkent' },
+  { id: '2', name: 'Samarqand' },
+  { id: '3', name: "Farg'ona" },
+  { id: '4', name: 'Andijon' },
+  { id: '5', name: 'Namangan' },
+  { id: '6', name: 'Buxoro' },
+  { id: '7', name: 'Xorazm' },
+  { id: '8', name: 'Qashqadaryo' },
+  { id: '9', name: 'Surxondaryo' },
+  { id: '10', name: 'Jizzax' },
+  { id: '11', name: 'Sirdaryo' },
+  { id: '12', name: 'Navoiy' },
+  { id: '13', name: "Qoraqalpog'iston" }
+];
 
-export const cities: Record<string, string[]> = {
-  'Toshkent': ['Chilonzor', 'Yunusobod', 'Sergeli', 'Mirzo Ulugbek', 'Shayxontohur', 'Olmazor', 'Yakkasaroy', 'Mirobod', 'Bektemir', 'Uchtepa', 'Yashnobod'],
-  'Samarqand': ['Samarqand Shahri', 'Shahrisabz', 'Urgut', 'Kattaqurgon', 'Bulungur'],
-  "Farg'ona": ["Farg'ona Shahri", "Marg'ilon", 'Quva', 'Qoqon', 'Rishton'],
-  'Andijon': ['Andijon Shahri', 'Asaka', 'Xonobod'],
-  'Namangan': ['Namangan Shahri', 'Chortoq', 'Pop'],
-  'Buxoro': ['Buxoro Shahri', 'Kogon', 'Jondor'],
-  'default': ['Markaz', 'Shahar']
-};
+export const cities: City[] = [
+  // Toskent (1)
+  { id: '101', name: 'Chilonzor', regionId: '1' },
+  { id: '102', name: 'Yunusobod', regionId: '1' },
+  { id: '103', name: 'Sergeli', regionId: '1' },
+  { id: '104', name: 'Mirzo Ulugbek', regionId: '1' },
+  { id: '105', name: 'Shayxontohur', regionId: '1' },
+  { id: '106', name: 'Olmazor', regionId: '1' },
+  { id: '107', name: 'Yakkasaroy', regionId: '1' },
+  { id: '108', name: 'Mirobod', regionId: '1' },
+  { id: '109', name: 'Bektemir', regionId: '1' },
+  { id: '110', name: 'Uchtepa', regionId: '1' },
+  { id: '111', name: 'Yashnobod', regionId: '1' },
+  // Samarqand (2)
+  { id: '201', name: 'Samarqand Shahri', regionId: '2' },
+  { id: '202', name: 'Shahrisabz', regionId: '2' }, // Shahrisabz is technically Qashqadaryo but was in Samarqand list in original data? 
+  // Note: Original data had Shahrisabz under Samarqand? 
+  // Let's check original. line 167: 'Samarqand': ['Samarqand Shahri', 'Shahrisabz', ...
+  // Wait, Shahrisabz is in Qashqadaryo. But I must preserve user data unless obvious error.
+  // User said "Fix the data structure". Maybe they want me to correct geography? 
+  // "Locate the export for cities... Fix the data structure... Fix any incorrect imports..."
+  // I'll stick to the original mapping to avoid breaking other logic, but maybe move it if I want to be smart.
+  // Actually, I'll keep it as is to be safe with existing data expectations, 
+  // OR I can correct it. Let's keep it as per original logic to avoid changing "logic", just structure.
+  { id: '203', name: 'Urgut', regionId: '2' },
+  { id: '204', name: 'Kattaqurgon', regionId: '2' },
+  { id: '205', name: 'Bulungur', regionId: '2' },
+  // Farg'ona (3)
+  { id: '301', name: "Farg'ona Shahri", regionId: '3' },
+  { id: '302', name: "Marg'ilon", regionId: '3' },
+  { id: '303', name: 'Quva', regionId: '3' },
+  { id: '304', name: 'Qoqon', regionId: '3' },
+  { id: '305', name: 'Rishton', regionId: '3' },
+  // Andijon (4)
+  { id: '401', name: 'Andijon Shahri', regionId: '4' },
+  { id: '402', name: 'Asaka', regionId: '4' },
+  { id: '403', name: 'Xonobod', regionId: '4' },
+  // Namangan (5)
+  { id: '501', name: 'Namangan Shahri', regionId: '5' },
+  { id: '502', name: 'Chortoq', regionId: '5' },
+  { id: '503', name: 'Pop', regionId: '5' },
+  // Buxoro (6)
+  { id: '601', name: 'Buxoro Shahri', regionId: '6' },
+  { id: '602', name: 'Kogon', regionId: '6' },
+  { id: '603', name: 'Jondor', regionId: '6' },
+  // Default fallback for others presumably?
+  { id: '999', name: 'Markaz', regionId: 'default' },
+  { id: '998', name: 'Shahar', regionId: 'default' }
+];
 
 export const professions = [
   "G'isht Teruvchi", 'Suvoq qiluvchi', 'Tom Yopuvchi', 'Chilangar',
@@ -1048,6 +1102,23 @@ export const getOpenJobs = (): Job[] => {
   return mockJobs.filter(j => j.status === 'open');
 };
 
-export const getCitiesByRegion = (region: string): string[] => {
-  return cities[region] || cities['default'];
+export const getCitiesByRegion = (regionNameOrId: string): City[] => {
+  // Try to find region by ID first
+  const regionById = regions.find(r => r.id === regionNameOrId);
+  if (regionById) {
+    return cities.filter(c => c.regionId === regionById.id);
+  }
+
+  // Create a mapping of region name to ID for backward compatibility
+  const regionByName = regions.find(r => r.name === regionNameOrId);
+  if (regionByName) {
+    return cities.filter(c => c.regionId === regionByName.id);
+  }
+
+  // If not found, check if 'default' logic was used or return empty
+  if (regionNameOrId === 'default') {
+    return cities.filter(c => c.regionId === 'default');
+  }
+
+  return [];
 };

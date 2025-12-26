@@ -53,7 +53,7 @@ export default function UstallarPage() {
   return (
     <>
       <Header />
-      
+
       <main className="max-w-[1400px] mx-auto py-6 px-4 sm:px-6">
         <Breadcrumbs />
 
@@ -76,18 +76,18 @@ export default function UstallarPage() {
         <section className="card-static p-5 mb-6">
           <div className="flex flex-col lg:flex-row gap-4">
             <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              <select 
+              <select
                 value={selectedRegion}
                 onChange={(e) => { setSelectedRegion(e.target.value); setSelectedCity(''); }}
                 className="input select"
               >
                 <option value="">{language === 'uz' ? "Barcha viloyatlar" : language === 'ru' ? "Все регионы" : "All regions"}</option>
                 {regions.map(r => (
-                  <option key={r} value={r}>{r}</option>
+                  <option key={r.id} value={r.name}>{r.name}</option>
                 ))}
               </select>
 
-              <select 
+              <select
                 value={selectedCity}
                 onChange={(e) => setSelectedCity(e.target.value)}
                 className="input select"
@@ -95,11 +95,11 @@ export default function UstallarPage() {
               >
                 <option value="">{language === 'uz' ? "Barcha tumanlar" : language === 'ru' ? "Все районы" : "All districts"}</option>
                 {cities.map(c => (
-                  <option key={c} value={c}>{c}</option>
+                  <option key={c.id} value={c.name}>{c.name}</option>
                 ))}
               </select>
 
-              <select 
+              <select
                 value={selectedProfession}
                 onChange={(e) => setSelectedProfession(e.target.value)}
                 className="input select"
@@ -110,7 +110,7 @@ export default function UstallarPage() {
                 ))}
               </select>
 
-              <select 
+              <select
                 value={minRating}
                 onChange={(e) => setMinRating(Number(e.target.value))}
                 className="input select"
@@ -124,8 +124,8 @@ export default function UstallarPage() {
 
             <div className="flex items-center gap-3">
               <label className="flex items-center gap-2 cursor-pointer">
-                <input 
-                  type="checkbox" 
+                <input
+                  type="checkbox"
                   checked={verifiedOnly}
                   onChange={(e) => setVerifiedOnly(e.target.checked)}
                   className="w-4 h-4 text-primary-600 rounded"
@@ -135,7 +135,7 @@ export default function UstallarPage() {
                 </span>
               </label>
 
-              <button 
+              <button
                 onClick={clearFilters}
                 className="text-sm text-primary-600 hover:text-primary-700"
               >
@@ -151,7 +151,7 @@ export default function UstallarPage() {
             </span>
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500">{language === 'uz' ? "Saralash:" : language === 'ru' ? "Сортировка:" : "Sort by:"}</span>
-              <select 
+              <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
                 className="input select !py-1.5 !text-sm !w-auto"
@@ -167,7 +167,7 @@ export default function UstallarPage() {
         {/* Masters Grid */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {filteredMasters.map(master => (
-            <Link 
+            <Link
               key={master.id}
               href={`/ustalar/${master.id}`}
               className="card p-5 group"
@@ -175,8 +175,8 @@ export default function UstallarPage() {
               {/* Header */}
               <div className="flex items-start gap-4">
                 <div className="relative">
-                  <Image 
-                    src={master.avatar} 
+                  <Image
+                    src={master.avatar}
                     alt={master.name}
                     width={64}
                     height={64}
@@ -221,7 +221,7 @@ export default function UstallarPage() {
               {master.badges && master.badges.length > 0 && (
                 <div className="flex flex-wrap gap-1 mt-3">
                   {master.badges.slice(0, 2).map(badge => (
-                    <span 
+                    <span
                       key={badge.id}
                       className="inline-flex items-center gap-1 px-2 py-0.5 bg-amber-50 text-amber-700 text-xs rounded-full"
                     >

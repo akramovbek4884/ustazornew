@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import Header from '@/components/Header';
 import Footer from '@/components/Footer';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { professions, regions, cities } from '@/lib/data';
+import { professions, regions, getCitiesByRegion } from '@/lib/data';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export default function CreateJobPage() {
@@ -142,7 +142,7 @@ export default function CreateJobPage() {
 
     const t = translations[language as keyof typeof translations] || translations.uz;
 
-    const availableCities = formData.region ? (cities[formData.region] || cities['default']) : [];
+    const availableCities = formData.region ? getCitiesByRegion(formData.region) : [];
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -261,7 +261,7 @@ export default function CreateJobPage() {
                                 >
                                     <option value="">{t.selectRegion}</option>
                                     {regions.map((region) => (
-                                        <option key={region} value={region}>{region}</option>
+                                        <option key={region.id} value={region.name}>{region.name}</option>
                                     ))}
                                 </select>
                             </div>
@@ -276,7 +276,7 @@ export default function CreateJobPage() {
                                 >
                                     <option value="">{t.selectCity}</option>
                                     {availableCities.map((city) => (
-                                        <option key={city} value={city}>{city}</option>
+                                        <option key={city.id} value={city.name}>{city.name}</option>
                                     ))}
                                 </select>
                             </div>
@@ -304,8 +304,8 @@ export default function CreateJobPage() {
                                         type="button"
                                         onClick={() => setFormData({ ...formData, urgency: level })}
                                         className={`p-3 rounded-xl text-sm text-left transition-all ${formData.urgency === level
-                                                ? 'bg-yellow-500/20 border-2 border-yellow-500 text-yellow-400'
-                                                : 'bg-gray-800/50 border border-gray-700 text-gray-400 hover:border-gray-600'
+                                            ? 'bg-yellow-500/20 border-2 border-yellow-500 text-yellow-400'
+                                            : 'bg-gray-800/50 border border-gray-700 text-gray-400 hover:border-gray-600'
                                             }`}
                                     >
                                         {t.urgencyLevels[level as keyof typeof t.urgencyLevels]}

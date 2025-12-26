@@ -77,7 +77,7 @@ export default function MasterProfileSetup() {
                     >
                         <option value="">Tanlang</option>
                         {professions.map(p => (
-                            <option key={p.id} value={p.name}>{p.name}</option>
+                            <option key={p} value={p}>{p}</option>
                         ))}
                     </select>
                 </div>

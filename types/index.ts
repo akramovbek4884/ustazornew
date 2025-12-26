@@ -64,6 +64,17 @@ export interface TimeSlot {
   end: string; // HH:mm
 }
 
+export interface Region {
+  id: string;
+  name: string;
+}
+
+export interface City {
+  id: string;
+  name: string;
+  regionId: string;
+}
+
 export interface Badge {
   id: string;
   name: string;
@@ -193,12 +204,12 @@ export interface Booking {
   cancellationReason?: string;
 }
 
-export type BookingStatus = 
-  | 'pending' 
-  | 'confirmed' 
-  | 'in_progress' 
-  | 'completed' 
-  | 'cancelled' 
+export type BookingStatus =
+  | 'pending'
+  | 'confirmed'
+  | 'in_progress'
+  | 'completed'
+  | 'cancelled'
   | 'disputed';
 
 // ==================== REVIEWS ====================
@@ -424,13 +435,13 @@ export interface Notification {
   createdAt: string;
 }
 
-export type NotificationType = 
-  | 'booking' 
-  | 'message' 
-  | 'review' 
-  | 'job' 
-  | 'course' 
-  | 'system' 
+export type NotificationType =
+  | 'booking'
+  | 'message'
+  | 'review'
+  | 'job'
+  | 'course'
+  | 'system'
   | 'promotion';
 
 // ==================== PAYMENTS ====================

@@ -122,7 +122,7 @@ export default function LeaderboardPage() {
                     >
                         <option value="">{t.allRegions}</option>
                         {regions.map((region) => (
-                            <option key={region} value={region}>{region}</option>
+                            <option key={region.id} value={region.name}>{region.name}</option>
                         ))}
                     </select>
                 </div>

@@ -49,7 +49,7 @@ export default function JobsPage() {
   return (
     <>
       <Header />
-      
+
       <main className="max-w-[1400px] mx-auto py-6 px-4 sm:px-6">
         <Breadcrumbs />
 
@@ -66,7 +66,7 @@ export default function JobsPage() {
                   {language === 'uz' ? "Mijozlarning so'rovlarini toping va murojaat qiling" : language === 'ru' ? "Найдите заявки клиентов и откликнитесь" : "Find client requests and apply"}
                 </p>
               </div>
-              <button 
+              <button
                 onClick={() => setShowPostModal(true)}
                 className="btn bg-white text-blue-600 hover:bg-blue-50"
               >
@@ -82,7 +82,7 @@ export default function JobsPage() {
         {/* Filters */}
         <section className="card-static p-5 mb-6">
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <select 
+            <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
               className="input select"
@@ -93,18 +93,18 @@ export default function JobsPage() {
               ))}
             </select>
 
-            <select 
+            <select
               value={selectedRegion}
               onChange={(e) => setSelectedRegion(e.target.value)}
               className="input select"
             >
               <option value="">{language === 'uz' ? "Barcha viloyatlar" : language === 'ru' ? "Все регионы" : "All regions"}</option>
               {regions.map(r => (
-                <option key={r} value={r}>{r}</option>
+                <option key={r.id} value={r.name}>{r.name}</option>
               ))}
             </select>
 
-            <select 
+            <select
               value={selectedUrgency}
               onChange={(e) => setSelectedUrgency(e.target.value)}
               className="input select"
@@ -172,9 +172,9 @@ export default function JobsPage() {
                       {job.budget.toLocaleString()} {language === 'uz' ? "so'm" : "сум"}
                     </div>
                     <div className="text-sm text-gray-500">
-                      {job.budgetType === 'fixed' ? (language === 'uz' ? "Belgilangan" : language === 'ru' ? "Фиксировано" : "Fixed") 
-                       : job.budgetType === 'hourly' ? (language === 'uz' ? "Soatiga" : language === 'ru' ? "Почасово" : "Hourly")
-                       : (language === 'uz' ? "Kelishiladi" : language === 'ru' ? "Договорная" : "Negotiable")}
+                      {job.budgetType === 'fixed' ? (language === 'uz' ? "Belgilangan" : language === 'ru' ? "Фиксировано" : "Fixed")
+                        : job.budgetType === 'hourly' ? (language === 'uz' ? "Soatiga" : language === 'ru' ? "Почасово" : "Hourly")
+                          : (language === 'uz' ? "Kelishiladi" : language === 'ru' ? "Договорная" : "Negotiable")}
                     </div>
                     {job.deadline && (
                       <p className="text-xs text-gray-500 mt-2">
@@ -205,7 +205,7 @@ export default function JobsPage() {
                 <h2 className="text-xl font-bold text-gray-900">
                   {language === 'uz' ? "Yangi e'lon" : language === 'ru' ? "Новое объявление" : "New Job"}
                 </h2>
-                <button 
+                <button
                   onClick={() => setShowPostModal(false)}
                   className="p-2 hover:bg-gray-100 rounded-lg"
                 >
