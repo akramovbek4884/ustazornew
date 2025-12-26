@@ -5,23 +5,22 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLanguage } from '@/lib/i18n/LanguageContext';
+import { useAuth } from '@/lib/auth/AuthContext';
 import LanguageSwitcher from './LanguageSwitcher';
 import { mockNotifications } from '@/lib/data';
 
 export default function Header() {
-  const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showMoreMenu, setShowMoreMenu] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
   const pathname = usePathname();
   const router = useRouter();
   const { t, language } = useLanguage();
+  const { user, logout } = useAuth();
+  const isLoggedIn = !!user;
 
   // Check login status on mount
   useEffect(() => {
-    const loginStatus = localStorage.getItem('isLoggedIn');
-    setIsLoggedIn(loginStatus === 'true');
     setUnreadCount(mockNotifications.filter(n => !n.read).length);
   }, [pathname]);
 
@@ -36,26 +35,13 @@ export default function Header() {
 
   // Close menu on route change
   useEffect(() => {
-    setMenuOpen(false);
     setShowMoreMenu(false);
   }, [pathname]);
 
-  // Prevent body scroll when menu is open
-  useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = '';
-    }
-    return () => {
-      document.body.style.overflow = '';
-    };
-  }, [menuOpen]);
+
 
   const handleLogout = () => {
-    localStorage.removeItem('isLoggedIn');
-    localStorage.removeItem('userProfile');
-    setIsLoggedIn(false);
+    logout();
     router.push('/');
   };
 
@@ -277,7 +263,7 @@ export default function Header() {
                 </div>
               ) : (
                 <Link
-                  href="/"
+                  href="/auth/register"
                   className={`flex items-center gap-2 px-3 py-2 rounded-xl font-semibold text-sm transition-all ${scrolled
                     ? 'bg-primary-500 text-white hover:bg-primary-600 shadow-sm'
                     : 'bg-white/20 text-white hover:bg-white/30 backdrop-blur-sm'
@@ -290,177 +276,23 @@ export default function Header() {
                 </Link>
               )}
 
-              {/* Mobile Menu Button */}
-              <button
-                className={`flex lg:hidden flex-col justify-center items-center w-10 h-10 rounded-lg transition-colors ${scrolled ? 'hover:bg-gray-100' : 'hover:bg-white/10'
-                  }`}
-                onClick={() => setMenuOpen(!menuOpen)}
-                aria-expanded={menuOpen}
-                aria-controls="mobile-menu"
-                aria-label={menuOpen ? 'Menyuni yopish' : 'Menyuni ochish'}
-              >
-                <span className={`block w-5 h-0.5 rounded-full transition-all duration-300 ${scrolled ? 'bg-gray-700' : 'bg-white'
-                  } ${menuOpen ? 'rotate-45 translate-y-1.5' : ''}`} />
-                <span className={`block w-5 h-0.5 rounded-full my-1 transition-all duration-300 ${scrolled ? 'bg-gray-700' : 'bg-white'
-                  } ${menuOpen ? 'opacity-0' : ''}`} />
-                <span className={`block w-5 h-0.5 rounded-full transition-all duration-300 ${scrolled ? 'bg-gray-700' : 'bg-white'
-                  } ${menuOpen ? '-rotate-45 -translate-y-1.5' : ''}`} />
-              </button>
             </div>
           </div>
         </div>
-
-        {/* Mobile Menu */}
-        <div
-          id="mobile-menu"
-          className={`lg:hidden fixed inset-x-0 top-[60px] bottom-0 bg-white z-[99] transition-all duration-300 overflow-y-auto ${menuOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'
-            }`}
-        >
-          <nav className="flex flex-col p-4 space-y-1" role="navigation" aria-label="Mobil navigatsiya">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-base transition-colors ${isActive(item.href)
-                  ? 'bg-primary-50 text-primary-600'
-                  : 'text-gray-700 hover:bg-gray-50'
-                  }`}
-                aria-current={isActive(item.href) ? 'page' : undefined}
-              >
-                {item.label}
-              </Link>
-            ))}
-
-            {/* More Section */}
-            <div className="pt-2 mt-2 border-t border-gray-100">
-              <p className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase">
-                {language === 'uz' ? "Ko'proq" : language === 'ru' ? "Ещё" : "More"}
-              </p>
-              {moreItems.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-base transition-colors ${isActive(item.href)
-                    ? 'bg-primary-50 text-primary-600'
-                    : 'text-gray-700 hover:bg-gray-50'
-                    }`}
-                >
-                  <span className="text-lg">{item.icon}</span>
-                  {item.label}
-                </Link>
-              ))}
-            </div>
-
-            {isLoggedIn && (
-              <div className="pt-2 mt-2 border-t border-gray-100">
-                <p className="px-4 py-2 text-xs font-semibold text-gray-400 uppercase">
-                  {language === 'uz' ? "Shaxsiy" : language === 'ru' ? "Личное" : "Personal"}
-                </p>
-                <Link
-                  href="/profil"
-                  className="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-base text-gray-700 hover:bg-gray-50"
-                >
-                  <span className="text-lg">👤</span>
-                  {t.nav.profile}
-                </Link>
-                <Link
-                  href="/dashboard"
-                  className="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-base text-gray-700 hover:bg-gray-50"
-                >
-                  <span className="text-lg">📊</span>
-                  {language === 'uz' ? "Boshqaruv paneli" : language === 'ru' ? "Панель управления" : "Dashboard"}
-                </Link>
-                <Link
-                  href="/my-bookings"
-                  className="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-base text-gray-700 hover:bg-gray-50"
-                >
-                  <span className="text-lg">📅</span>
-                  {language === 'uz' ? "Buyurtmalarim" : language === 'ru' ? "Мои заказы" : "My Bookings"}
-                </Link>
-                <Link
-                  href="/sevimlilar"
-                  className="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-base text-gray-700 hover:bg-gray-50"
-                >
-                  <span className="text-lg">❤️</span>
-                  {language === 'uz' ? "Sevimlilar" : language === 'ru' ? "Избранное" : "Favorites"}
-                </Link>
-                <Link
-                  href="/xabarlar"
-                  className="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-base text-gray-700 hover:bg-gray-50"
-                >
-                  <span className="text-lg">💬</span>
-                  {language === 'uz' ? "Xabarlar" : language === 'ru' ? "Сообщения" : "Messages"}
-                </Link>
-                <Link
-                  href="/bildirishnomalar"
-                  className="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-base text-gray-700 hover:bg-gray-50"
-                >
-                  <span className="text-lg">🔔</span>
-                  {language === 'uz' ? "Bildirishnomalar" : language === 'ru' ? "Уведомления" : "Notifications"}
-                  {unreadCount > 0 && (
-                    <span className="ml-auto px-2 py-0.5 bg-red-500 text-white text-xs font-bold rounded-full">
-                      {unreadCount}
-                    </span>
-                  )}
-                </Link>
-              </div>
-            )}
-
-            <div className="pt-4 mt-4 border-t border-gray-100">
-              {/* Mobile Language Switcher */}
-              <div className="px-4 py-3">
-                <LanguageSwitcher variant="default" />
-              </div>
-
-              <a
-                href="https://t.me/usta_zor"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-base text-gray-700 hover:bg-gray-50 transition-colors"
-              >
-                <Image
-                  src="/img/Telegramlogo.png"
-                  alt="Telegram"
-                  width={24}
-                  height={24}
-                  className="w-6 h-6"
-                />
-                Telegram
-              </a>
-
-              {isLoggedIn && (
-                <button
-                  onClick={handleLogout}
-                  className="flex items-center gap-3 px-4 py-3.5 rounded-xl font-medium text-base text-red-600 hover:bg-red-50 transition-colors w-full"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
-                    <path fillRule="evenodd" d="M7.5 3.75A1.5 1.5 0 006 5.25v13.5a1.5 1.5 0 001.5 1.5h6a1.5 1.5 0 001.5-1.5V15a.75.75 0 011.5 0v3.75a3 3 0 01-3 3h-6a3 3 0 01-3-3V5.25a3 3 0 013-3h6a3 3 0 013 3V9A.75.75 0 0115 9V5.25a1.5 1.5 0 00-1.5-1.5h-6zm10.72 4.72a.75.75 0 011.06 0l3 3a.75.75 0 010 1.06l-3 3a.75.75 0 11-1.06-1.06l1.72-1.72H9a.75.75 0 010-1.5h10.94l-1.72-1.72a.75.75 0 010-1.06z" clipRule="evenodd" />
-                  </svg>
-                  {t.nav.logout}
-                </button>
-              )}
-            </div>
-          </nav>
-        </div>
       </header>
 
-      {/* Mobile Menu Overlay */}
-      {menuOpen && (
-        <div
-          className="lg:hidden fixed inset-0 bg-black/20 z-[98]"
-          onClick={() => setMenuOpen(false)}
-          aria-hidden="true"
-        />
-      )}
+
 
       {/* Close dropdown when clicking outside */}
-      {showMoreMenu && (
-        <div
-          className="fixed inset-0 z-[99]"
-          onClick={() => setShowMoreMenu(false)}
-          aria-hidden="true"
-        />
-      )}
+      {
+        showMoreMenu && (
+          <div
+            className="fixed inset-0 z-[99]"
+            onClick={() => setShowMoreMenu(false)}
+            aria-hidden="true"
+          />
+        )
+      }
     </>
   );
 }

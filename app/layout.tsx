@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { LanguageProvider } from '@/lib/i18n/LanguageContext';
+import BottomNav from '@/components/BottomNav';
+import { AuthProvider } from '@/lib/auth/AuthContext';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://ustazor.uz'),
@@ -73,7 +75,10 @@ export default function RootLayout({
       </head>
       <body className="bg-background-light text-neutral-900 min-h-screen antialiased">
         <LanguageProvider>
-          {children}
+          <AuthProvider>
+            {children}
+            <BottomNav />
+          </AuthProvider>
         </LanguageProvider>
       </body>
     </html>

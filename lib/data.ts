@@ -1,6 +1,6 @@
-import { 
-  Master, Video, Course, Question, Material, 
-  Booking, Review, Job, ForumCategory, ForumTopic, 
+import {
+  Master, Video, Course, Question, Material,
+  Booking, Review, Job, ForumCategory, ForumTopic,
   BlogPost, Conversation, Message, Notification,
   Service, PortfolioItem
 } from '@/types';
@@ -481,6 +481,8 @@ export const testQuestions: Question[] = [
 
 // ==================== DEMO MASTERS FOR RATING ====================
 
+export const demoMasters: any[] = []; // Empty or populated from API in real app
+/*
 export const demoMasters = [
   { name: 'Abdulloh', profession: 'Elektrik', rating: 0, id: 'd1' },
   { name: 'Madina', profession: 'Santexnik', rating: 0, id: 'd2' },
@@ -489,6 +491,7 @@ export const demoMasters = [
   { name: 'Nodirbek', profession: 'Payvandchi', rating: 0, id: 'd5' },
   { name: 'Rustam', profession: "G'isht Teruvchi", rating: 0, id: 'd6' }
 ];
+*/
 
 // ==================== BOOKINGS ====================
 
