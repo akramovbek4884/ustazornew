@@ -9,18 +9,18 @@ import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export default function ProfilPage() {
   const [currentStep, setCurrentStep] = useState(1);
-  const [profileImg, setProfileImg] = useState('/img/logo ustajon.png');
+  const [profileImg, setProfileImg] = useState('/img/logo-new.png');
   const [isSaving, setIsSaving] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
   const { t, language } = useLanguage();
-  
+
   // Form steps with translations
   const steps = [
     { id: 1, title: t.profile.steps.personal, description: t.profile.steps.personalDesc },
     { id: 2, title: t.profile.steps.location, description: t.profile.steps.locationDesc },
     { id: 3, title: t.profile.steps.profession, description: t.profile.steps.professionDesc },
   ];
-  
+
   // Form fields
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -35,7 +35,7 @@ export default function ProfilPage() {
   const [job, setJob] = useState('');
   const [experience, setExperience] = useState('');
   const [bio, setBio] = useState('');
-  
+
   // Validation errors
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -112,9 +112,9 @@ export default function ProfilPage() {
 
   const saveProfile = () => {
     if (!validateStep(currentStep)) return;
-    
+
     setIsSaving(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       localStorage.setItem('firstName', firstName);
@@ -130,7 +130,7 @@ export default function ProfilPage() {
       localStorage.setItem('job', job);
       localStorage.setItem('experience', experience);
       localStorage.setItem('bio', bio);
-      
+
       setIsSaving(false);
       setShowSuccess(true);
       setTimeout(() => setShowSuccess(false), 3000);
@@ -141,8 +141,8 @@ export default function ProfilPage() {
 
   // Regions list with translations
   const regions = language === 'ru' ? [
-    'Ташкент', 'Самарканд', 'Фергана', 'Андижан', 'Наманган', 
-    'Бухара', 'Хорезм', 'Кашкадарья', 'Сурхандарья', 'Джизак', 
+    'Ташкент', 'Самарканд', 'Фергана', 'Андижан', 'Наманган',
+    'Бухара', 'Хорезм', 'Кашкадарья', 'Сурхандарья', 'Джизак',
     'Сырдарья', 'Навои', 'Каракалпакстан'
   ] : language === 'en' ? [
     'Tashkent', 'Samarkand', 'Fergana', 'Andijan', 'Namangan',
@@ -196,10 +196,10 @@ export default function ProfilPage() {
   return (
     <>
       <Header />
-      
+
       <main id="main-content" className="max-w-[900px] mx-auto py-6 px-4 sm:px-6">
         <Breadcrumbs />
-        
+
         {/* Page Header */}
         <div className="mb-6">
           <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">{t.profile.title}</h1>
@@ -213,8 +213,8 @@ export default function ProfilPage() {
             <span className="text-sm font-semibold text-primary-600">{completionPercentage}%</span>
           </div>
           <div className="progress-bar">
-            <div 
-              className="progress-bar-fill" 
+            <div
+              className="progress-bar-fill"
               style={{ width: `${completionPercentage}%` }}
             />
           </div>
@@ -224,22 +224,21 @@ export default function ProfilPage() {
         <div className="flex items-center justify-between mb-8 relative">
           {/* Progress Line */}
           <div className="absolute top-5 left-0 right-0 h-0.5 bg-gray-200 -z-10" />
-          <div 
+          <div
             className="absolute top-5 left-0 h-0.5 bg-primary-500 -z-10 transition-all duration-300"
             style={{ width: `${((currentStep - 1) / 2) * 100}%` }}
           />
-          
+
           {steps.map((step) => (
-            <div 
+            <div
               key={step.id}
               className="flex flex-col items-center"
             >
-              <div 
-                className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all ${
-                  currentStep >= step.id 
-                    ? 'bg-primary-500 text-white' 
+              <div
+                className={`w-10 h-10 rounded-full flex items-center justify-center font-semibold text-sm transition-all ${currentStep >= step.id
+                    ? 'bg-primary-500 text-white'
                     : 'bg-gray-100 text-gray-400'
-                }`}
+                  }`}
               >
                 {currentStep > step.id ? (
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
@@ -247,14 +246,12 @@ export default function ProfilPage() {
                   </svg>
                 ) : step.id}
               </div>
-              <span className={`mt-2 text-sm font-medium hidden sm:block ${
-                currentStep >= step.id ? 'text-primary-600' : 'text-gray-400'
-              }`}>
+              <span className={`mt-2 text-sm font-medium hidden sm:block ${currentStep >= step.id ? 'text-primary-600' : 'text-gray-400'
+                }`}>
                 {step.title}
               </span>
-              <span className={`text-xs hidden sm:block ${
-                currentStep >= step.id ? 'text-gray-500' : 'text-gray-400'
-              }`}>
+              <span className={`text-xs hidden sm:block ${currentStep >= step.id ? 'text-gray-500' : 'text-gray-400'
+                }`}>
                 {step.description}
               </span>
             </div>
@@ -267,15 +264,15 @@ export default function ProfilPage() {
           {currentStep === 1 && (
             <div className="animate-fadeIn">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">{t.profile.personalInfo}</h2>
-              
+
               {/* Profile Image */}
               <div className="flex flex-col sm:flex-row items-center gap-6 mb-8 pb-8 border-b border-gray-100">
                 <label htmlFor="imgInput" className="cursor-pointer group">
                   <div className="relative w-24 h-24">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img 
-                      src={profileImg} 
-                      alt={t.profile.profilePhoto} 
+                    <img
+                      src={profileImg}
+                      alt={t.profile.profilePhoto}
                       className="w-24 h-24 rounded-full object-cover ring-4 ring-primary-50 group-hover:ring-primary-100 transition-all"
                     />
                     <div className="absolute inset-0 rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
@@ -286,17 +283,17 @@ export default function ProfilPage() {
                     </div>
                   </div>
                 </label>
-                <input 
-                  type="file" 
-                  id="imgInput" 
-                  accept="image/*" 
+                <input
+                  type="file"
+                  id="imgInput"
+                  accept="image/*"
                   className="hidden"
                   onChange={handleImageChange}
                 />
                 <div>
                   <h3 className="font-medium text-gray-900">{t.profile.profilePhoto}</h3>
                   <p className="text-sm text-gray-500 mt-1">{t.profile.photoHint}</p>
-                  <label 
+                  <label
                     htmlFor="imgInput"
                     className="inline-block mt-2 text-sm text-primary-600 font-medium cursor-pointer hover:text-primary-700"
                   >
@@ -311,8 +308,8 @@ export default function ProfilPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     {t.profile.firstName} <span className="text-red-500">*</span>
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     placeholder={t.profile.firstName}
@@ -327,8 +324,8 @@ export default function ProfilPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     {t.profile.lastName} <span className="text-red-500">*</span>
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     placeholder={t.profile.lastName}
@@ -343,8 +340,8 @@ export default function ProfilPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     {t.profile.phone} <span className="text-red-500">*</span>
                   </label>
-                  <input 
-                    type="tel" 
+                  <input
+                    type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+998 90 123 45 67"
@@ -359,8 +356,8 @@ export default function ProfilPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     {t.profile.email}
                   </label>
-                  <input 
-                    type="email" 
+                  <input
+                    type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="example@mail.com"
@@ -372,7 +369,7 @@ export default function ProfilPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     {t.profile.gender}
                   </label>
-                  <select 
+                  <select
                     value={gender}
                     onChange={(e) => setGender(e.target.value)}
                     className="input select"
@@ -387,8 +384,8 @@ export default function ProfilPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     {t.profile.birthday}
                   </label>
-                  <input 
-                    type="date" 
+                  <input
+                    type="date"
                     value={birthday}
                     onChange={(e) => setBirthday(e.target.value)}
                     className="input"
@@ -402,14 +399,14 @@ export default function ProfilPage() {
           {currentStep === 2 && (
             <div className="animate-fadeIn">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">{t.profile.steps.location}</h2>
-              
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     {t.profile.country}
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={country}
                     onChange={(e) => setCountry(e.target.value)}
                     placeholder={t.profile.country}
@@ -421,7 +418,7 @@ export default function ProfilPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     {t.profile.region} <span className="text-red-500">*</span>
                   </label>
-                  <select 
+                  <select
                     value={region}
                     onChange={(e) => setRegion(e.target.value)}
                     className={`input select ${errors.region ? 'border-red-500 focus:border-red-500' : ''}`}
@@ -440,8 +437,8 @@ export default function ProfilPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     {t.profile.district} <span className="text-red-500">*</span>
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
                     placeholder={t.profile.districtPlaceholder}
@@ -456,8 +453,8 @@ export default function ProfilPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     {t.profile.mfy}
                   </label>
-                  <input 
-                    type="text" 
+                  <input
+                    type="text"
                     value={mfy}
                     onChange={(e) => setMfy(e.target.value)}
                     placeholder={t.profile.mfyPlaceholder}
@@ -472,13 +469,13 @@ export default function ProfilPage() {
           {currentStep === 3 && (
             <div className="animate-fadeIn">
               <h2 className="text-xl font-semibold text-gray-900 mb-6">{t.profile.steps.profession}</h2>
-              
+
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     {t.profile.profession} <span className="text-red-500">*</span>
                   </label>
-                  <select 
+                  <select
                     value={job}
                     onChange={(e) => setJob(e.target.value)}
                     className={`input select ${errors.job ? 'border-red-500 focus:border-red-500' : ''}`}
@@ -497,7 +494,7 @@ export default function ProfilPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     {t.profile.experience}
                   </label>
-                  <select 
+                  <select
                     value={experience}
                     onChange={(e) => setExperience(e.target.value)}
                     className="input select"
@@ -515,7 +512,7 @@ export default function ProfilPage() {
                   <label className="block text-sm font-medium text-gray-700 mb-1.5">
                     {t.profile.about}
                   </label>
-                  <textarea 
+                  <textarea
                     value={bio}
                     onChange={(e) => setBio(e.target.value)}
                     placeholder={t.profile.aboutPlaceholder}
@@ -577,7 +574,7 @@ export default function ProfilPage() {
 
         {/* Back to Home Link */}
         <div className="mt-6 text-center">
-          <Link 
+          <Link
             href="/home"
             className="text-gray-500 hover:text-primary-600 text-sm transition-colors"
           >

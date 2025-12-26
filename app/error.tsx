@@ -21,10 +21,10 @@ export default function Error({ error, reset }: ErrorProps) {
       <header className="py-4 px-6 border-b border-gray-100 bg-white">
         <div className="max-w-[1400px] mx-auto">
           <Link href="/home" className="flex items-center gap-2">
-            <Image 
-              src="/img/logo ustajon.png" 
-              alt="Usta Zo'r Logo" 
-              width={40} 
+            <Image
+              src="/img/logo-new.png"
+              alt="Usta Zo'r Logo"
+              width={40}
               height={40}
               className="w-10 h-10"
             />
@@ -38,10 +38,10 @@ export default function Error({ error, reset }: ErrorProps) {
         <div className="text-center max-w-md">
           {/* Error Illustration */}
           <div className="w-24 h-24 mx-auto mb-6 bg-red-50 rounded-full flex items-center justify-center">
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              viewBox="0 0 24 24" 
-              fill="currentColor" 
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
               className="w-12 h-12 text-red-500"
             >
               <path fillRule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z" clipRule="evenodd" />
@@ -58,7 +58,7 @@ export default function Error({ error, reset }: ErrorProps) {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <button 
+            <button
               onClick={reset}
               className="btn btn-primary"
             >
@@ -67,7 +67,7 @@ export default function Error({ error, reset }: ErrorProps) {
               </svg>
               Qayta urinish
             </button>
-            <Link 
+            <Link
               href="/home"
               className="btn btn-outline"
             >

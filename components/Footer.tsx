@@ -16,10 +16,10 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="sm:col-span-2 lg:col-span-1">
             <Link href="/home" className="flex items-center gap-2 mb-4">
-              <Image 
-                src="/img/logo ustajon.png" 
-                alt="Usta Zo'r Logo" 
-                width={40} 
+              <Image
+                src="/img/logo-new.png"
+                alt="Usta Zo'r Logo"
+                width={40}
                 height={40}
                 className="w-10 h-10"
               />
@@ -29,17 +29,17 @@ export default function Footer() {
               {t.footer.description}
             </p>
             <div className="flex items-center gap-3">
-              <a 
-                href="https://t.me/usta_zor" 
-                target="_blank" 
+              <a
+                href="https://t.me/usta_zor"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center justify-center w-10 h-10 rounded-lg bg-[#0088cc]/10 hover:bg-[#0088cc]/20 transition-colors"
                 aria-label="Telegram"
               >
-                <Image 
-                  src="/img/Telegramlogo.png" 
-                  alt="Telegram" 
-                  width={20} 
+                <Image
+                  src="/img/Telegramlogo.png"
+                  alt="Telegram"
+                  width={20}
                   height={20}
                   className="w-5 h-5"
                 />
@@ -136,10 +136,10 @@ export default function Footer() {
           <div className="flex items-center gap-3 text-sm text-gray-500">
             <span className="text-gray-400">{t.footer.partnership}</span>
             <div className="bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">
-              <Image 
-                src="/img/yoshlar-agentligi-logo.svg" 
-                alt="O'zbekiston Respublikasi Yoshlar ishlari agentligi" 
-                width={200} 
+              <Image
+                src="/img/yoshlar-agentligi-logo.svg"
+                alt="O'zbekiston Respublikasi Yoshlar ishlari agentligi"
+                width={200}
                 height={48}
                 className="h-10 w-auto object-contain"
               />

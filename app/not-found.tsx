@@ -14,10 +14,10 @@ export default function NotFound() {
       <header className="py-4 px-6 border-b border-gray-100 bg-white">
         <div className="max-w-[1400px] mx-auto flex items-center justify-between">
           <Link href="/home" className="flex items-center gap-2">
-            <Image 
-              src="/img/logo ustajon.png" 
-              alt="Usta Zo'r Logo" 
-              width={40} 
+            <Image
+              src="/img/logo-new.png"
+              alt="Usta Zo'r Logo"
+              width={40}
               height={40}
               className="w-10 h-10"
             />
@@ -37,10 +37,10 @@ export default function NotFound() {
             </div>
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="w-24 h-24 sm:w-32 sm:h-32 bg-primary-50 rounded-full flex items-center justify-center">
-                <svg 
-                  xmlns="http://www.w3.org/2000/svg" 
-                  viewBox="0 0 24 24" 
-                  fill="currentColor" 
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
                   className="w-12 h-12 sm:w-16 sm:h-16 text-primary-500"
                 >
                   <path fillRule="evenodd" d="M11.54 22.351l.07.04.028.016a.76.76 0 00.723 0l.028-.015.071-.041a16.975 16.975 0 001.144-.742 19.58 19.58 0 002.683-2.282c1.944-1.99 3.963-4.98 3.963-8.827a8.25 8.25 0 00-16.5 0c0 3.846 2.02 6.837 3.963 8.827a19.58 19.58 0 002.682 2.282 16.975 16.975 0 001.145.742zM12 13.5a3 3 0 100-6 3 3 0 000 6z" clipRule="evenodd" />
@@ -59,7 +59,7 @@ export default function NotFound() {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
-            <Link 
+            <Link
               href="/home"
               className="btn btn-primary"
             >
@@ -68,7 +68,7 @@ export default function NotFound() {
               </svg>
               {t.notFound.backHome}
             </Link>
-            <Link 
+            <Link
               href="/kurslar"
               className="btn btn-outline"
             >

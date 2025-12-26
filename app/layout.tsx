@@ -14,8 +14,8 @@ export const metadata: Metadata = {
   creator: 'USTA ZO\'R',
   publisher: 'USTA ZO\'R',
   icons: {
-    icon: '/img/logo ustajon.png',
-    apple: '/img/logo ustajon.png',
+    icon: '/img/logo-new.png',
+    apple: '/img/logo-new.png',
   },
   manifest: '/manifest.json',
   openGraph: {
@@ -27,7 +27,7 @@ export const metadata: Metadata = {
     description: "O'zbekistonning eng yaxshi ustalarini toping, video darsliklar orqali kasbni o'rganing va sertifikat oling.",
     images: [
       {
-        url: '/img/logo ustajon.png',
+        url: '/img/logo-new.png',
         width: 512,
         height: 512,
         alt: "USTA ZO'R Logo",
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: "USTA ZO'R — Ustalarni toping va kasbni o'rganing",
     description: "O'zbekistonning eng yaxshi ustalarini toping, video darsliklar orqali kasbni o'rganing.",
-    images: ['/img/logo ustajon.png'],
+    images: ['/img/logo-new.png'],
   },
   robots: {
     index: true,

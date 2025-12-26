@@ -31,19 +31,19 @@ export default function SantexnikPage() {
       <header className={`sticky top-0 z-50 backdrop-blur-md ${isDark ? 'bg-[rgba(12,15,20,0.6)] border-b border-white/5' : 'bg-white/60 border-b border-black/5'}`}>
         <div className="max-w-[1100px] mx-auto px-4 py-3 flex items-center justify-between gap-3">
           <Link href="/home">
-            <Image 
-              src="/img/home-removebg-preview (1).png" 
-              alt="home" 
-              width={40} 
+            <Image
+              src="/img/home-removebg-preview (1).png"
+              alt="home"
+              width={40}
               height={40}
               className="h-10 w-auto bg-white rounded-full p-1"
             />
           </Link>
           <div className="flex items-center gap-3">
-            <Image 
-              src="/img/logo ustajon.png" 
-              alt="logo" 
-              width={48} 
+            <Image
+              src="/img/logo-new.png"
+              alt="logo"
+              width={48}
               height={48}
               className="w-12 h-12 rounded-lg object-cover"
             />
@@ -52,7 +52,7 @@ export default function SantexnikPage() {
               <div className="text-xs text-gray-500">Nodirbek Payvandchi — master-klasslar</div>
             </div>
           </div>
-          <button 
+          <button
             onClick={() => setIsDark(!isDark)}
             className="px-3 py-1.5 rounded-lg bg-white shadow text-sm font-semibold"
           >
@@ -65,10 +65,10 @@ export default function SantexnikPage() {
         {/* Hero/Bio */}
         <div className="flex items-center gap-4 mb-5">
           <div className={`${isDark ? 'bg-[#0f1720]' : 'bg-white'} p-3 rounded-xl shadow-md flex items-center gap-3`}>
-            <Image 
-              src="/img/020.png" 
-              alt="Usta" 
-              width={72} 
+            <Image
+              src="/img/020.png"
+              alt="Usta"
+              width={72}
               height={72}
               className="w-[72px] h-[72px] rounded-xl object-cover"
             />
@@ -83,7 +83,7 @@ export default function SantexnikPage() {
         {/* Video Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {santexnikVideos.map((videoId, index) => (
-            <iframe 
+            <iframe
               key={index}
               src={`https://www.youtube.com/embed/${videoId}`}
               className="w-full h-[180px] md:h-[215px] lg:h-[240px] rounded-lg"

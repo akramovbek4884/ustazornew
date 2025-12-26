@@ -103,7 +103,7 @@ export default function Header() {
               <Link href="/home" className="flex items-center gap-1.5 sm:gap-2 group shrink-0">
                 <div className={`relative w-8 h-8 sm:w-11 sm:h-11 rounded-xl overflow-hidden transition-transform group-hover:scale-105 ${scrolled ? 'shadow-md' : ''}`}>
                   <Image
-                    src="/img/logo ustajon.png"
+                    src="/img/logo-new.png"
                     alt="Usta Zo'r Logo"
                     fill
                     className="object-contain"
