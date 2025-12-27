@@ -3,8 +3,8 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
-// This page redirects to home - registration is disabled
-export default function RegisterPage() {
+// This page redirects to home - login is disabled
+export default function LoginPage() {
     const router = useRouter();
 
     useEffect(() => {

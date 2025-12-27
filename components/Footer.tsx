@@ -6,7 +6,7 @@ import { useLanguage } from '@/lib/i18n/LanguageContext';
 
 export default function Footer() {
   const currentYear = new Date().getFullYear();
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
 
   return (
     <footer className="bg-white border-t border-gray-100">
@@ -57,18 +57,23 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
+                <Link href="/ustalar" className="text-gray-500 hover:text-primary-500 transition-colors text-sm">
+                  {language === 'uz' ? "Ustalar" : language === 'ru' ? "Мастера" : "Masters"}
+                </Link>
+              </li>
+              <li>
                 <Link href="/kurslar" className="text-gray-500 hover:text-primary-500 transition-colors text-sm">
                   {t.nav.courses}
                 </Link>
               </li>
               <li>
-                <Link href="/calculator" className="text-gray-500 hover:text-primary-500 transition-colors text-sm">
-                  {t.nav.calculator}
+                <Link href="/about" className="text-gray-500 hover:text-primary-500 transition-colors text-sm">
+                  {language === 'uz' ? "Biz haqimizda" : language === 'ru' ? "О нас" : "About"}
                 </Link>
               </li>
               <li>
-                <Link href="/sertifikat" className="text-gray-500 hover:text-primary-500 transition-colors text-sm">
-                  {t.courses.getCertificate}
+                <Link href="/faq" className="text-gray-500 hover:text-primary-500 transition-colors text-sm">
+                  {language === 'uz' ? "Savollar" : language === 'ru' ? "Вопросы" : "FAQ"}
                 </Link>
               </li>
             </ul>
@@ -132,6 +137,14 @@ export default function Footer() {
             <span>USTA ZO&apos;R &copy; {currentYear}</span>
             <span className="hidden sm:inline">•</span>
             <span className="hidden sm:inline">{t.footer.allRights}</span>
+            <span className="hidden sm:inline">•</span>
+            <Link href="/privacy" className="hidden sm:inline hover:text-primary-500 transition-colors">
+              {language === 'uz' ? "Maxfiylik" : language === 'ru' ? "Конфиденциальность" : "Privacy"}
+            </Link>
+            <span className="hidden sm:inline">•</span>
+            <Link href="/terms" className="hidden sm:inline hover:text-primary-500 transition-colors">
+              {language === 'uz' ? "Shartlar" : language === 'ru' ? "Условия" : "Terms"}
+            </Link>
           </div>
           <div className="flex items-center gap-3 text-sm text-gray-500">
             <span className="text-gray-400">{t.footer.partnership}</span>
