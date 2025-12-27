@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
-import { Request as PrismaRequest } from '@prisma/client';
 
 export async function POST(req: Request) {
     try {
@@ -76,7 +75,7 @@ export async function GET(req: Request) {
 
         const user = session.user;
 
-        let requests: PrismaRequest[] | object[];
+        let requests: Awaited<ReturnType<typeof db.request.findMany>> | object[];
         if (user.role === 'client') {
             requests = await db.request.findMany({
                 where: { clientId: user.id },
