@@ -147,3 +147,5 @@ Copy `.env.example` to `.env.local` and configure:
 ## License
 
 © 2025 USTA ZO'R. All rights reserved.
+  
+ 
