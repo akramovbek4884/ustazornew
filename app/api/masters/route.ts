@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
-import { Prisma } from '@prisma/client';
 
 export async function GET(req: Request) {
     try {
@@ -10,7 +9,8 @@ export async function GET(req: Request) {
         const profession = searchParams.get('profession');
         const search = searchParams.get('search');
 
-        const where: Prisma.MasterProfileWhereInput = {
+        // Build where clause dynamically
+        const where: Record<string, unknown> = {
             // Only show verified or completed profiles if needed. For now show all.
         };
 

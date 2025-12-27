@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import db from '@/lib/db';
-import { Prisma, Request as PrismaRequest } from '@prisma/client';
+import { Request as PrismaRequest } from '@prisma/client';
 
 export async function POST(req: Request) {
     try {
