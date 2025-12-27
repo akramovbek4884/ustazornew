@@ -4,7 +4,7 @@
   "description": "USTA ZO'R - Platform for finding craftsmen and educational video courses",
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint"
   },
