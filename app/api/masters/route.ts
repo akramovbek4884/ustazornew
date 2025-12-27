@@ -41,7 +41,7 @@ export async function GET(req: Request) {
         });
 
         // Map to frontend structure
-        const mappedMasters = masters.map(m => ({
+        const mappedMasters = masters.map((m: (typeof masters)[number]) => ({
             id: m.id,
             name: m.user.name || 'Unknown Master',
             profession: m.profession,
