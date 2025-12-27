@@ -36,7 +36,6 @@ export async function PUT(req: Request) {
             where: { id: userId },
             data: {
                 name: name || undefined,
-                email: email || undefined,
                 // phone is usually immutable or requires verification
             }
         });

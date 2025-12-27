@@ -52,7 +52,7 @@ export async function GET(
             experience: master.experience,
             services: master.services,
             portfolio: master.portfolio,
-            reviews: master.reviews.map(r => ({
+            reviews: master.reviews.map((r: NonNullable<typeof master>['reviews'][number]) => ({
                 id: r.id,
                 userName: r.client.name || 'Anonymous',
                 rating: r.rating,
